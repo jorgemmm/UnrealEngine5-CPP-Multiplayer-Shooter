@@ -55,5 +55,5 @@ the plugin (multiplayersession) to connect session it doesn´t work correclty in
 if you have any issue please use NULL subsystem to check in your pc dev.
 
 ## License
--This project is licensed under the [MIT License](https://mit-license.org/).
--Original code from udemy courses: [Unreal Engine 5 C++ Multiplayer Shooter](https://www.udemy.com/course/unreal-engine-5-cpp-multiplayer-shooter/)
+- This project is licensed under the [MIT License](https://mit-license.org/).
+- Original code from udemy courses: [Unreal Engine 5 C++ Multiplayer Shooter](https://www.udemy.com/course/unreal-engine-5-cpp-multiplayer-shooter/)
