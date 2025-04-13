@@ -291,50 +291,6 @@ void ABlasterCharacter::RunButtonReleased()
 	SetInAlert(false); //To propagate WalkSpeeed
 }
 
-void ABlasterCharacter::OnRep_bRolling()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Repnotify work out"));
-
-	//For debug porposes
-	//Si no se usa
-
-	if (GetLocalRole() == ROLE_AutonomousProxy) {
-		FString rollingMessage = FString::Printf(TEXT("Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
-		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, rollingMessage);
-
-		//bRolling = bIsRolling;
-		UE_LOG(LogTemp, Warning, TEXT("Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
-	}
-
-	//Client-specific functionality
-	if (IsLocallyControlled())
-	{   
-		FString rollingMessage = FString::Printf(TEXT("Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
-		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, rollingMessage);
-
-		UE_LOG(LogTemp, Warning, TEXT(" Client:   Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
-		
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
-		}
-		
-	}
-
-	//Server-specific functionality
-	if (GetLocalRole() == ROLE_Authority)
-	 {
-
-		FString serverRollingMessage = FString::Printf(TEXT(" %s now has Roll button press %s"), *GetFName().ToString(), (bRolling ? TEXT("true") : TEXT("true")));
-		if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, serverRollingMessage);
-		
-		UE_LOG(LogTemp, Warning, TEXT(" %s now has Roll button press %s"), *GetFName().ToString(), (bRolling ? TEXT("true") : TEXT("true")));
-		
-
-	}
-
-	//Cualquier funcionalidad que deba ocurrir en todas las máquinas. Clientes y servidor. 
-
-	
-}
 
 //Petición local
 void ABlasterCharacter::SetRolling(bool bIsRolling)
