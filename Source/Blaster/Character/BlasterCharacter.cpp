@@ -26,11 +26,9 @@
 
 
 
-// Sets default values
+
 ABlasterCharacter::ABlasterCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	
 	
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -46,9 +44,7 @@ ABlasterCharacter::ABlasterCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	SetInAlert(false);
-	//SetOrientToMovement(true);	
-	/*GetCharacterMovement()->bOrientRotationToMovement = true;
-	bUseControllerRotationYaw = false;*/
+	
 
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(RootComponent);
@@ -76,8 +72,6 @@ ABlasterCharacter::ABlasterCharacter()
 
 
 
-
-// Called when the game starts or when spawned
 void ABlasterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -85,68 +79,12 @@ void ABlasterCharacter::BeginPlay()
 	CurrentHealth = MaxHealth;
 }
 
-// Called every frame
+
 void ABlasterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	AimOffset(DeltaTime);
-
-	//=====================
-	//!!!!!!Set to false in Constructor PrimaryActorTick.bCanEverTick = false; !!!!!!!!!!!!!!
-	//if you don¥t use tick mehtod
-
-	return; //comment for debug Set to true PrimaryActorTick.bCanEverTick
-
-	if (!Combat)
-	{
-		//if (Combat->bAiming)
-		return;
-	}
-	const float Speed = GetCharacterMovement()->Velocity.Length();
-	
-	//Clients
-	if (IsLocallyControlled())
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				15.f,
-				FColor::Blue,
-				FString::Printf(TEXT("ownclient tb listenserver: is aiming?: %s to speed: %f "), Combat->bAiming ? TEXT("true") : TEXT("false"), Speed)
-			);
-		}
-	}
-
-	if (GetLocalRole() == ROLE_SimulatedProxy)
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				15.f,
-				FColor::Yellow,
-				FString::Printf(TEXT(" otros jugadores %s: is aiming?: %s , to speed: %f"), *GetFName().ToString(), Combat->bAiming ? TEXT("true") : TEXT("false"), Speed)
-			);
-		}
-	}
-
-
-
-	//server
-	if (GetLocalRole() == ROLE_Authority)
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				15.f,
-				FColor::Yellow,
-				FString::Printf(TEXT("Server %s: is aiming?: %s , to speed: %f"), *GetFName().ToString(), Combat->bAiming ? TEXT("true") : TEXT("false"), Speed)
-			);
-		}
-	}
 
 
 }
@@ -200,12 +138,9 @@ void ABlasterCharacter::AimButtonPressed()
 {
 	if (Combat)
 	{
-		if (Combat->bAiming) return; //To avoid server RPC 
-		//Combat->bAiming =true;
+		if (Combat->bAiming) return; //To avoid server RPC 		
 		Combat->SetAiming(true);
-
 		SetInAlert(true);
-		//SetOrientToMovement(false);
 
 	}
 }
@@ -213,13 +148,9 @@ void ABlasterCharacter::AimButtonPressed()
 void ABlasterCharacter::AimButtonReleased()
 {
 	if (Combat)
-	{
-		//Combat->bAiming = false;
+	{		
 		Combat->SetAiming(false);
 		SetInAlert(false);
-		//SetOrientToMovement(true);
-		
-		
 	}
 }
 
@@ -280,7 +211,7 @@ void ABlasterCharacter::EquipButtonPressed()
 
 		if ( HasAuthority() )
 		{
-			//Friend class can acces to private member.
+			
 			Combat->EquipWeapon(OverlappingWeapon);
 		}
 		else
@@ -291,40 +222,16 @@ void ABlasterCharacter::EquipButtonPressed()
 	}
 }
 
-//Fire mechanics
-//void ABlasterCharacter::Fire()
-//{
-//	SetOrientToMovement(false);
-//	
-//	Server_RequestFire();
-//}
-//
-//void  ABlasterCharacter::Server_RequestFire_Implementation()
-//{
-//	HandeleFire();
-//}
-//
-//void  ABlasterCharacter::HandeleFire()
-//{
-//   
-//	//
-//
-//}
-//Roll mechanic
+
 
 void ABlasterCharacter::RollButtonPressed()
-{
-	
-	SetRolling(true);
-	//bRolling ? false : true;
-	//Poner Timer y hasta que no pasen 3 segundos siempre reponder con bIsRolling = false;
-	//Poner metodo para que evitar/ignorar todo line trace en esos segundos
+{	
+	SetRolling(true);	
 }
 
 void ABlasterCharacter::RollButtonReleased()
 {
 	SetRolling(false);	
-
 }
 
 void ABlasterCharacter::AimOffset(float DeltaTime)
@@ -351,7 +258,7 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 	}
 
 	AO_Pitch = GetBaseAimRotation().Pitch;
-	//UE_LOG(LogTemp, Error, TEXT("AO_Pitch: %f "), AO_Pitch);
+	//UE_LOG(LogTemp, Warning, TEXT("AO_Pitch: %f "), AO_Pitch);
 
 	if (AO_Pitch > 90.f && !IsLocallyControlled())
 	{
@@ -359,14 +266,13 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 		FVector2D InRange(270.f, 360.f);
 		FVector2D OutRange(-90.f, 0.f);
 		AO_Pitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Pitch);
-		UE_LOG(LogTemp, Warning, TEXT("AO_Pitch with clamp: %f "), AO_Pitch);
+		//UE_LOG(LogTemp, Warning, TEXT("AO_Pitch with clamp: %f "), AO_Pitch);
 	}
 
 }
 
 void ABlasterCharacter::RunButtonPressed()
 {
-	
 
 	SetRunning(true);
 	WalkSpeed = RunSpeed;
@@ -385,18 +291,12 @@ void ABlasterCharacter::RunButtonReleased()
 	SetInAlert(false); //To propagate WalkSpeeed
 }
 
-
-
-//Si bRolling cambia se notificar· este metÛdo en todos los clientes
-void ABlasterCharacter::OnRep_bRolling()//(bool bIsRolling)
+void ABlasterCharacter::OnRep_bRolling()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Repnotify work out"));
-	//Use this function to avoid damage 
-	//for example To request server change Collision, ignore projectile. etc.
 
-	//No est· funcionando no se dispara. =???
-
-	// and show 
+	//For debug porposes
+	//Si no se usa
 
 	if (GetLocalRole() == ROLE_AutonomousProxy) {
 		FString rollingMessage = FString::Printf(TEXT("Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
@@ -414,16 +314,8 @@ void ABlasterCharacter::OnRep_bRolling()//(bool bIsRolling)
 
 		UE_LOG(LogTemp, Warning, TEXT(" Client:   Roll button press %s"), (bRolling ? TEXT("true") : TEXT("true")));
 		
-		//Health for debug
-		
-		/*FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), CurrentHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
-
-		if (CurrentHealth <= 0)
-		{
-			FString deathMessage = FString::Printf(TEXT("You have been killed."));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
-		}*/
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+		}
 		
 	}
 
@@ -436,18 +328,15 @@ void ABlasterCharacter::OnRep_bRolling()//(bool bIsRolling)
 		
 		UE_LOG(LogTemp, Warning, TEXT(" %s now has Roll button press %s"), *GetFName().ToString(), (bRolling ? TEXT("true") : TEXT("true")));
 		
-		/*FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), CurrentHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);*/
-
 
 	}
 
-	//Cualquier funcionalidad que deba ocurrir en todas las m·quinas. Clientes y servidor. 
+	//Cualquier funcionalidad que deba ocurrir en todas las m√°quinas. Clientes y servidor. 
 
 	
 }
 
-//PeticiÛn local
+//Petici√≥n local
 void ABlasterCharacter::SetRolling(bool bIsRolling)
 {
 	bRolling = bIsRolling;
@@ -455,14 +344,14 @@ void ABlasterCharacter::SetRolling(bool bIsRolling)
 }
 
 
-//RPC to server:  PeticiÛn a servidor
+//RPC to server:  Petici√≥n a servidor
 void ABlasterCharacter::Server_RequestSetRolling_Implementation(bool bIsRolling)
 {
 	bRolling = bIsRolling;
 }
 
 
-//PeticiÛn local
+//Petici√≥n local
 void ABlasterCharacter::SetRunning(bool bIsRunning)
 {
 	bRunning = bIsRunning;
@@ -470,7 +359,7 @@ void ABlasterCharacter::SetRunning(bool bIsRunning)
 }
 
 
-//RPC to server:  PeticiÛn a servidor
+//RPC to server:  Petici√≥n a servidor
 void ABlasterCharacter::Server_RequestSetRunning_Implementation(bool bIsRunning)
 {
 	bRunning = bIsRunning;
