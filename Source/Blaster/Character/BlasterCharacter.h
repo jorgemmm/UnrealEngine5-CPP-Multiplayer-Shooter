@@ -75,24 +75,21 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		UCombatComponent* Combat;
 
-	UFUNCTION()
-		void OnRep_bRolling();//(bool bIsRolling);
+	
 
-	//petición local
+	//peticiÃ³n local
 	 void SetRolling(bool bIsRolling);
 
 	//Solicitud a servidor
 	UFUNCTION(Server, Reliable)
 		void Server_RequestSetRolling(bool bIsRolling);
 
-	//petición local
+	//peticiÃ³n local
 	void SetRunning(bool bIsRunning);
 
 	//Solicitud a servidor
 	UFUNCTION(Server, Reliable)
 		void Server_RequestSetRunning(bool bIsRunning);
-
-
 
 	UPROPERTY(VisibleAnywhere,  BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		float WalkSpeed=600.f;
@@ -108,23 +105,6 @@ private:
 
 	
 	
-
-	
-		
-	
-
-
-	
-	//Fire mechanics
-	//local Request
-	//void Fire();
-
-
-	////Server request
-	//UFUNCTION(Server, Reliable)
-	//	void Server_RequestFire();
-	//
-	//void HandeleFire();
 
 
 	UFUNCTION(Server, Reliable)
@@ -164,8 +144,6 @@ public:
 
 	/** Set by character movement to specify that this Character is currently rolling. */
 	UPROPERTY(BlueprintReadOnly, replicated, Category = Character)
-	//UPROPERTY(replicatedUsing = OnRep_Rolling)
-	//UPROPERTY(BlueprintReadOnly, replicatedUsing = OnRep_bRolling, Category = Character)
 	 bool bRolling=false;	
 
 	UPROPERTY(BlueprintReadOnly, replicated, Category = Character)
